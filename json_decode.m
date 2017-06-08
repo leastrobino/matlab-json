@@ -1,12 +1,12 @@
 %JSON_DECODE parses a JSON string and returns a MATLAB object.
-%   JSON objects are converted to structures and JSON arrays are
-%   converted to cell arrays. NULL values are converted to empty logical.
+%   JSON objects are converted to structures and JSON arrays are converted to
+%   vectors (all elements of the same type) or cell arrays (different types).
+%   'null' values are converted to NaN.
 %
 %   Example:
-%     search = 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=matlab';
-%     results = json_decode(urlread(search));
-%     disp(results.responseData.results{1}.titleNoFormatting);
-%     disp(results.responseData.results{1}.visibleUrl);
+%     url = 'http://aviationweather.gov/gis/scripts/MetarJSON.php?bbox=6.11,46.23,6.12,46.24';
+%     metar = json_decode(urlread(url));
+%     disp(metar.features.properties);
 %
 %   Note:
 %     This function implements a superset of JSON as specified in the original
@@ -19,5 +19,5 @@
 %     See http://www.rfc-editor.org/rfc/rfc7159.txt for more information.
 
 %  Created by Léa Strobino.
-%  Copyright 2016. All rights reserved.
+%  Copyright 2017. All rights reserved.
 %  The JSON parser is based on jsmn (http://zserge.com/jsmn.html).

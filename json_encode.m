@@ -1,16 +1,17 @@
 %JSON_ENCODE encodes a MATLAB object into a JSON string.
-%   Structures are converted to JSON objects and arrays are converted to
-%   JSON arrays. Inf and NaN values are converted to string. Empty logical
-%   values are converted to NULL.
+%   Structures are converted to JSON objects and arrays are converted
+%   to JSON arrays. Inf values are converted to the string "Inf". NaN values
+%   are converted to 'null'.
 %
 %   Example:
 %     s = struct();
-%     s.patients(1).name = 'John Doe';
-%     s.patients(1).billing = 127.00;
-%     s.patients(1).test = [79, 75, 73, 180, 178, 177.5, 220, 210, 205];
-%     s.patients(2).name = 'Ann Lane';
-%     s.patients(2).billing = 28.50;
-%     s.patients(2).test = [68, 70, 68, 118, 118, 119, 172, 170, 169];
+%     s.patient.name = 'John Doe';
+%     s.patient.billing = 127.00;
+%     s.patient.test = [79, 75, 73; 180, 178, 177.5; 220, 210, 205];
+%     s.patient(2).name = 'Ann Lane';
+%     s.patient(2).billing = 28.50;
+%     s.patient(2).test = [68, 70, 68; 118, 118, 119; 172, 170, 169];
+%     s.patient(3).name = 'New Name';
 %     disp(json_encode(s));
 %
 %   Note:
@@ -24,4 +25,4 @@
 %     See http://www.rfc-editor.org/rfc/rfc7159.txt for more information.
 
 %  Created by Léa Strobino.
-%  Copyright 2016. All rights reserved.
+%  Copyright 2017. All rights reserved.

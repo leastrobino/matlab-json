@@ -2,7 +2,7 @@
  *  json_encode.c
  *
  *  Created by Léa Strobino.
- *  Copyright 2016. All rights reserved.
+ *  Copyright 2017. All rights reserved.
  *
  */
 
@@ -54,7 +54,6 @@ void json_append_char(c) {
 
 #define json_append_number(format, value) { \
   if (mxIsInf(value)) json_append_string("\"Inf\","); \
-  else if (mxIsNaN(value)) json_append_string("\"NaN\","); \
   else json_append_string(format,value); \
 }
 
@@ -127,6 +126,10 @@ void json_encode_item(const mxArray *obj) {
     }
     json_append_char('"');
     
+  } else if (n == 0) {
+    
+    json_append_string("[]");
+    
   } else {
     
     if (n > 1) json_append_char('[');
@@ -160,28 +163,30 @@ void json_encode_item(const mxArray *obj) {
         break;
         
       case mxLOGICAL_CLASS:
-        if (n > 0) {
-          logical_ptr = mxGetData(obj);
-          for (i=0; i<n; i++) {
-            if (logical_ptr[i]) {
-              json_append_string("true,");
-            } else {
-              json_append_string("false,");
-            }
+        logical_ptr = mxGetData(obj);
+        for (i=0; i<n; i++) {
+          if (logical_ptr[i]) {
+            json_append_string("true,");
+          } else {
+            json_append_string("false,");
           }
-        } else {
-          json_append_string("null,");
         }
         break;
         
       case mxDOUBLE_CLASS:
         double_ptr = mxGetData(obj);
-        for (i=0; i<n; i++) json_append_number("%.16g,",double_ptr[i]);
+        for (i=0; i<n; i++) {
+          if (mxIsNaN(double_ptr[i])) json_append_string("null,");
+          else json_append_number("%.16g,",double_ptr[i]);
+        }
         break;
         
       case mxSINGLE_CLASS:
         single_ptr = mxGetData(obj);
-        for (i=0; i<n; i++) json_append_number("%.16g,",single_ptr[i]);
+        for (i=0; i<n; i++) {
+          if (mxIsNaN(single_ptr[i])) json_append_string("null,");
+          else json_append_number("%.16g,",single_ptr[i]);
+        }
         break;
         
       case mxINT8_CLASS:
@@ -229,7 +234,7 @@ void json_encode_item(const mxArray *obj) {
         
     }
     
-    json_strpos--;
+    if (json_strpos) json_strpos--;
     if (n > 1) json_append_char(']');
     
   }

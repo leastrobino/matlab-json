@@ -2,7 +2,7 @@
  *  json_decode.c
  *
  *  Created by Léa Strobino.
- *  Copyright 2016. All rights reserved.
+ *  Copyright 2017. All rights reserved.
  *
  */
 
@@ -64,10 +64,12 @@ char *json_get_string(jsmntok_t *t) {
 
 unsigned int json_parse_item(jsmntok_t *t, mxArray **obj) {
   
-  mxArray *item;
+  mxArray **array, *item;
   mxChar *chars;
+  mxClassID classID;
   mwSize n[2] = {1,1};
   char *str;
+  int cat = 1;
   unsigned int i, j;
   
   switch (t->type) {
@@ -84,11 +86,24 @@ unsigned int json_parse_item(jsmntok_t *t, mxArray **obj) {
       return j+1;
       
     case JSMN_ARRAY:
-      *obj = mxCreateCellMatrix(1,t->size);
+      array = mxMalloc(t->size*sizeof(mxArray*));
       for (i=j=0; i<t->size; i++) {
-        j += json_parse_item(t+1+j,&item);
-        mxSetCell(*obj,i,item);
+        j += json_parse_item(t+1+j,&array[i]);
+        cat &= (mxGetNumberOfElements(array[i]) == 1);
+        if (i == 0) {
+          cat &= !mxIsChar(array[i]);
+          classID = mxGetClassID(array[i]);
+        } else {
+          cat &= (classID == mxGetClassID(array[i]));
+        }
       }
+      if (cat && (mexCallMATLABWithTrap(1,obj,t->size,array,"horzcat") == NULL)) {
+        for (i=0; i<t->size; i++) mxDestroyArray(array[i]);
+      } else {
+        *obj = mxCreateCellMatrix(1,t->size);
+        for (i=0; i<t->size; i++) mxSetCell(*obj,i,array[i]);
+      }
+      mxFree(array);
       return j+1;
       
     case JSMN_PRIMITIVE:
@@ -102,7 +117,7 @@ unsigned int json_parse_item(jsmntok_t *t, mxArray **obj) {
       } else if (strcmp(str,"false") == 0) {
         *obj = mxCreateLogicalScalar(0);
       } else if (strcmp(str,"null") == 0) {
-        *obj = mxCreateLogicalMatrix(0,0);
+        *obj = mxCreateDoubleScalar(mxGetNaN());
       } else {
         error_parse(t->start);
       }
