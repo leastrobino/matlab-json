@@ -25,4 +25,4 @@
 %     See http://www.rfc-editor.org/rfc/rfc7159.txt for more information.
 
 %  Created by Léa Strobino.
-%  Copyright 2017. All rights reserved.
+%  Copyright 2018. All rights reserved.

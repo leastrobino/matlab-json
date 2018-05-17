@@ -2,7 +2,7 @@
  *  json_decode.c
  *
  *  Created by Léa Strobino.
- *  Copyright 2017. All rights reserved.
+ *  Copyright 2018. All rights reserved.
  *
  */
 
@@ -10,14 +10,16 @@
 #include <string.h>
 #include "jsmn.h"
 
-#define ERROR_MINRHS 1
-#define ERROR_MAXRHS 2
-#define ERROR_INVALID_ARGUMENT 3
-#define ERROR_MALLOC 4
+enum error {
+  ERROR_MINRHS,
+  ERROR_MAXRHS,
+  ERROR_INVALID_ARGUMENT,
+  ERROR_MALLOC
+};
 
 char *json_str;
 
-void error(const unsigned int e) {
+void error(enum error e) {
   switch (e) {
     case ERROR_MINRHS:
       mexErrMsgIdAndTxt("MATLAB:minrhs","Not enough input arguments.");

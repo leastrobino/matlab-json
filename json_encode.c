@@ -2,7 +2,7 @@
  *  json_encode.c
  *
  *  Created by Léa Strobino.
- *  Copyright 2017. All rights reserved.
+ *  Copyright 2018. All rights reserved.
  *
  */
 
@@ -13,25 +13,27 @@
 
 #define BUFFER_SIZE 1048576
 
-#define ERROR_MINRHS 1
-#define ERROR_MAXRHS 2
-#define ERROR_MALLOC 3
-#define ERROR_ENCODING 4
+enum error {
+  ERROR_MINRHS,
+  ERROR_MAXRHS,
+  ERROR_MALLOC,
+  ERROR_ENCODING
+};
 
 char *json_str;
 size_t json_strlen;
 unsigned int json_strpos;
 
-void error(const unsigned int e) {
+void error(enum error e) {
   switch (e) {
     case ERROR_MINRHS:
       mexErrMsgIdAndTxt("MATLAB:minrhs","Not enough input arguments.");
     case ERROR_MAXRHS:
       mexErrMsgIdAndTxt("MATLAB:maxrhs","Too many input arguments.");
     case ERROR_MALLOC:
-      mexErrMsgIdAndTxt("json_decode:malloc","Insufficient free heap space.");
+      mexErrMsgIdAndTxt("json_encode:malloc","Insufficient free heap space.");
     case ERROR_ENCODING:
-      mexErrMsgIdAndTxt("json_decode:sprintf:EncodingError","An encoding error occurred.");
+      mexErrMsgIdAndTxt("json_encode:sprintf:EncodingError","An encoding error occurred.");
   }
 }
 
@@ -47,7 +49,7 @@ void json_str_realloc() {
   if (json_str == NULL) error(ERROR_MALLOC);
 }
 
-void json_append_char(c) {
+void json_append_char(char c) {
   if (json_strlen-json_strpos < 2) json_str_realloc();
   json_str[json_strpos++] = c;
 }
@@ -150,8 +152,7 @@ void json_encode_item(const mxArray *obj) {
             }
           }
           if (nfields > 0) json_strpos--;
-          json_append_char('}');
-          json_append_char(',');
+          json_append_string("},");
         }
         break;
         

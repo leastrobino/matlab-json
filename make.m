@@ -10,8 +10,8 @@ function make(varargin)
 if nargin > 0 && strcmpi(varargin{1},'clean')
   
   m = mexext('all');
-  for k = 1:length(m)
-    delete(['*.' m(k).ext]);
+  for i = 1:length(m)
+    delete(['*.' m(i).ext]);
   end
   
 else

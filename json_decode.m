@@ -4,7 +4,7 @@
 %   'null' values are converted to NaN.
 %
 %   Example:
-%     url = 'http://aviationweather.gov/gis/scripts/MetarJSON.php?bbox=6.11,46.23,6.12,46.24';
+%     url = 'https://aviationweather.gov/gis/scripts/MetarJSON.php?bbox=6.11,46.23,6.12,46.24';
 %     metar = json_decode(urlread(url));
 %     disp(metar.features.properties);
 %
@@ -19,5 +19,5 @@
 %     See http://www.rfc-editor.org/rfc/rfc7159.txt for more information.
 
 %  Created by Léa Strobino.
-%  Copyright 2017. All rights reserved.
+%  Copyright 2018. All rights reserved.
 %  The JSON parser is based on jsmn (http://zserge.com/jsmn.html).
