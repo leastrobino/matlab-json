@@ -254,7 +254,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
   
   json_encode_item(prhs[0]);
   
-  json_str[json_strpos] = 0;
+  json_str[json_strpos] = '\0';
   plhs[0] = mxCreateString(json_str);
   mxFree(json_str);
   

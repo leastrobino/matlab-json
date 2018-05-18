@@ -58,7 +58,7 @@ char *json_get_string(jsmntok_t *t) {
   if (str == NULL) error(ERROR_MALLOC);
   
   memcpy(str,&json_str[t->start],t->end-t->start);
-  str[t->end-t->start] = 0;
+  str[t->end-t->start] = '\0';
   
   return str;
   
