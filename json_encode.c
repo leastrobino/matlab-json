@@ -55,8 +55,10 @@ void json_append_char(char c) {
 }
 
 #define json_append_number(format, value) { \
-  if (mxIsInf(value)) json_append_string("\"Inf\","); \
-  else json_append_string(format,value); \
+  if (mxIsInf(value)) { \
+    if (value < 0) json_append_string("\"-Inf\","); \
+    else json_append_string("\"Inf\","); \
+  } else json_append_string(format,value); \
 }
 
 void json_append_string(char *format, ...) {
