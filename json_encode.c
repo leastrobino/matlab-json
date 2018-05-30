@@ -54,8 +54,9 @@ void json_append_char(char c) {
   json_str[json_strpos++] = c;
 }
 
-#define json_append_number(format, value) { \
-  if (mxIsInf(value)) { \
+#define json_append_float(format, value) { \
+  if (mxIsNaN(value)) json_append_string("null,"); \
+  else if (mxIsInf(value)) { \
     if (value < 0) json_append_string("\"-Inf\","); \
     else json_append_string("\"Inf\","); \
   } else json_append_string(format,value); \
@@ -178,58 +179,52 @@ void json_encode_item(const mxArray *obj) {
         
       case mxDOUBLE_CLASS:
         double_ptr = mxGetData(obj);
-        for (i=0; i<n; i++) {
-          if (mxIsNaN(double_ptr[i])) json_append_string("null,");
-          else json_append_number("%.16g,",double_ptr[i]);
-        }
+        for (i=0; i<n; i++) json_append_float("%.16g,",double_ptr[i]);
         break;
         
       case mxSINGLE_CLASS:
         single_ptr = mxGetData(obj);
-        for (i=0; i<n; i++) {
-          if (mxIsNaN(single_ptr[i])) json_append_string("null,");
-          else json_append_number("%.16g,",single_ptr[i]);
-        }
+        for (i=0; i<n; i++) json_append_float("%.16g,",single_ptr[i]);
         break;
         
       case mxINT8_CLASS:
         int8_ptr = mxGetData(obj);
-        for (i=0; i<n; i++) json_append_number("%i,",int8_ptr[i]);
+        for (i=0; i<n; i++) json_append_string("%i,",int8_ptr[i]);
         break;
         
       case mxUINT8_CLASS:
         uint8_ptr = mxGetData(obj);
-        for (i=0; i<n; i++) json_append_number("%u,",uint8_ptr[i]);
+        for (i=0; i<n; i++) json_append_string("%u,",uint8_ptr[i]);
         break;
         
       case mxINT16_CLASS:
         int16_ptr = mxGetData(obj);
-        for (i=0; i<n; i++) json_append_number("%i,",int16_ptr[i]);
+        for (i=0; i<n; i++) json_append_string("%i,",int16_ptr[i]);
         break;
         
       case mxUINT16_CLASS:
         uint16_ptr = mxGetData(obj);
-        for (i=0; i<n; i++) json_append_number("%u,",uint16_ptr[i]);
+        for (i=0; i<n; i++) json_append_string("%u,",uint16_ptr[i]);
         break;
         
       case mxINT32_CLASS:
         int32_ptr = mxGetData(obj);
-        for (i=0; i<n; i++) json_append_number("%i,",int32_ptr[i]);
+        for (i=0; i<n; i++) json_append_string("%i,",int32_ptr[i]);
         break;
         
       case mxUINT32_CLASS:
         uint32_ptr = mxGetData(obj);
-        for (i=0; i<n; i++) json_append_number("%u,",uint32_ptr[i]);
+        for (i=0; i<n; i++) json_append_string("%u,",uint32_ptr[i]);
         break;
         
       case mxINT64_CLASS:
         int64_ptr = mxGetData(obj);
-        for (i=0; i<n; i++) json_append_number("%lli,",int64_ptr[i]);
+        for (i=0; i<n; i++) json_append_string("%lli,",int64_ptr[i]);
         break;
         
       case mxUINT64_CLASS:
         uint64_ptr = mxGetData(obj);
-        for (i=0; i<n; i++) json_append_number("%llu,",uint64_ptr[i]);
+        for (i=0; i<n; i++) json_append_string("%llu,",uint64_ptr[i]);
         break;
         
       default:
