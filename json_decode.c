@@ -99,10 +99,10 @@ unsigned int json_parse_item(jsmntok_t *t, mxArray **obj) {
           cat &= (classID == mxGetClassID(array[i]));
         }
       }
-      if (cat && (mexCallMATLABWithTrap(1,obj,t->size,array,"horzcat") == NULL)) {
+      if (cat && (mexCallMATLABWithTrap(1,obj,t->size,array,"vertcat") == NULL)) {
         for (i=0; i<t->size; i++) mxDestroyArray(array[i]);
       } else {
-        *obj = mxCreateCellMatrix(1,t->size);
+        *obj = mxCreateCellMatrix(t->size,1);
         for (i=0; i<t->size; i++) mxSetCell(*obj,i,array[i]);
       }
       mxFree(array);
