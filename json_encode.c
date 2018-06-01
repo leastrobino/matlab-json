@@ -21,8 +21,7 @@ enum error {
 };
 
 char *json_str;
-size_t json_strlen;
-unsigned int json_strpos;
+size_t json_strlen, json_strpos;
 
 void error(enum error e) {
   switch (e) {
@@ -54,12 +53,12 @@ void json_append_char(char c) {
   json_str[json_strpos++] = c;
 }
 
-#define json_append_float(format, value) { \
+#define json_append_float(value) { \
   if (mxIsNaN(value)) json_append_string("null,"); \
   else if (mxIsInf(value)) { \
     if (value < 0) json_append_string("\"-Inf\","); \
     else json_append_string("\"Inf\","); \
-  } else json_append_string(format,value); \
+  } else json_append_string("%.16g,",value); \
 }
 
 void json_append_string(char *format, ...) {
@@ -179,12 +178,12 @@ void json_encode_item(const mxArray *obj) {
         
       case mxDOUBLE_CLASS:
         double_ptr = mxGetData(obj);
-        for (i=0; i<n; i++) json_append_float("%.16g,",double_ptr[i]);
+        for (i=0; i<n; i++) json_append_float(double_ptr[i]);
         break;
         
       case mxSINGLE_CLASS:
         single_ptr = mxGetData(obj);
-        for (i=0; i<n; i++) json_append_float("%.16g,",single_ptr[i]);
+        for (i=0; i<n; i++) json_append_float(single_ptr[i]);
         break;
         
       case mxINT8_CLASS:

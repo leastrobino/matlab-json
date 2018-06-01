@@ -37,7 +37,7 @@ void error_parse(const unsigned int character) {
   char str[256];
   unsigned int i;
   
-  sprintf(str,"Parse error at character %d:\n",character+1);
+  sprintf(str,"Parse error at character %u:\n",character+1);
   
   if (character > 40) {
     sprintf(str,"%s%.*s\n",str,80,json_str+character-40);
